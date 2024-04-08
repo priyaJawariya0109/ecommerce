@@ -1,0 +1,209 @@
+﻿@model ecommerce.Models.CategoryModel
+
+
+
+
+
+<style>
+    /* CSS for pagination links */
+    .pagination {
+        display: inline-block;
+    }
+
+        .pagination a {
+            color: black;
+            float: left;
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: background-color .3s;
+            border: 1px solid #ddd;
+            margin: 0 4px;
+        }
+
+            .pagination a.active {
+                background-color: #4CAF50;
+                color: white;
+                border: 1px solid #4CAF50;
+            }
+
+            .pagination a:hover:not(.active) {
+                background-color: #ddd;
+            }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1>Category Details</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col text-end">
+            <a asp-action="details" asp-controller="category" class="btn btn-dark mb-3">Add Category</a>
+        </div>
+    </div>
+
+    <table id="categoryTable" class="table table-striped table-bordered table-responsive table-hover table-checkable">
+        <thead>
+            <tr>
+                <th>SNo.</th>
+                <th>Category Name</th>
+                <th>Description</th>
+                <th>Active</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
+@section Scripts {
+
+<script>
+    // $(document).ready(function () {
+    //     $('#categoryTable').DataTable({
+    //         "clear": true,
+    //         "destroy": true,
+    //         "serverSide": true,
+    //         "processing": true,
+    //         "paging": true,
+    //         "ajax": {
+    //             "url": '@Url.Action("CategoryList", "Category")',
+    //             "type": "POST",
+    //             "dataType": "json",
+    //             "dataSrc": ""
+    //         },
+    //         "columns": [
+    //             { "data": "CId", "name": "CId", "orderable": false },
+    //             { "data": "Name", "name": "Name", "orderable": false },
+    //             { "data": "Description", "name": "Description", "orderable": false },
+    //             { "data": "Status", "name": "Status", "orderable": false }
+    //         ]
+    //     });
+    // });
+        $(document).ready(function () {
+            console.log('Hi');
+            $('#categoryTable').DataTable({
+              
+             
+                "serverSide": true,
+                "processing": true,
+                "filter":true,
+          //      "lengthMenu": [10, 25, 50, 100],
+            //    "searching": false,
+                "ajax": {
+                    "url": '@Url.Action("CategoryList", "Category")',
+                    "type": "POST",
+                    "dataType": "json",
+                    "dataSrc": "",
+                    // "data": function (d) {
+                    //     d.page = (d.start / d.length) + 1; // page is 1-based index, so add 1
+                    //     d.pageSize = d.length;
+                    //     delete d.start; // Remove start parameter as it's not needed anymore
+                    //     delete d.length; // Remove length parameter as it's not needed anymore
+                    // }
+                },
+                "columns": [
+                    {
+                        "data": null,
+                        "name": "#",
+                        "orderable": true,
+                        "render": function (data, type, row, meta) {
+                            // Calculate the incremental number based on the row index
+                            return meta.row + 1;
+                        }
+                    },
+                    { "data": "name", "name": "Name", "orderable": true },
+                    { "data": "description", "name": "Description", "orderable": true },
+                    {
+                        "data": "active",
+                        "name": "Active",
+                        "orderable": true,
+                        "render": function (data, type, row) {
+                            return data ? 'Yes' : 'No';
+                        }
+                    },
+                    {
+                        "data": null,
+                        "name": "Actions",
+                        "orderable": false,
+                        "render": function (data, type, row) {
+                            // Edit and delete buttons
+                            var editUrl = '/category/details/' + row.cId;
+                            var deleteUrl = '/category/delete/' + row.cId;
+
+                            var buttons = '<a href="' + editUrl + '" class="btn btn-sm btn-primary btn-edit me-4">Edit</a>';
+                            buttons += '<a href="' + deleteUrl + '" class="btn btn-sm btn-danger btn-delete btnDelete" data-id="' + row.cId + '">Delete</a>';
+
+                            return buttons;
+                        }
+                    }
+                ],
+                // ,
+                // "initComplete": function (settings, json) {
+                //     $('#totalRecords').text(json.TotalRecords); // Update the total records element
+                // }
+
+
+                "columnDefs": [
+                    {
+                        targets:[0],
+                        searchable:false,
+                    }
+                ]
+            });
+        });
+
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
+
+</script>
+<script>
+
+    $("body").on("click", ".btnDelete", function (e) {
+        e.preventDefault();
+    var btnDelete = $(this);
+    var Id = btnDelete.data("id");
+
+    console.log(Id);
+    $.ajax({
+    type: "POST",
+    url: '@Url.Action("Delete", "Category")',
+    data: { Id: Id },
+    dataType: "json",
+    success: function (result) {
+    if (result.success) {
+    btnDelete.closest('tr').fadeOut('slow', function () {
+    $(this).remove();
+    });
+    toastr['success']("Deleted Successfully");
+    } else {
+    toastr['error']("Error occurred");
+    alert(result.message);
+    }
+    },
+    error: function () {
+    alert('Error during the AJAX request');
+    }
+    });
+    });
+
+</script>
+
+    }

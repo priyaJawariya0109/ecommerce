@@ -1,0 +1,130 @@
+﻿@model ecommerce.Models.ProductModel
+
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h4 class="text-center">ProductModel</h4>
+<div class="text-end mb-3">
+    <a href="@Url.Action("List", "Product")" class="btn btn-dark">Back to List</a>
+</div>
+<div class="container">
+    <div class="d-flex justify-content-center">
+        <div class="col-md-8">
+            <form asp-action="DetailsRequest" enctype="multipart/form-data" method="post" class="needs-validation">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="row">
+
+                    <div class="col-md-6 text-center">
+                        <div class="mb-3">
+                            <label for="CId" class="control-label">Select Category</label>
+                            @Html.DropDownListFor(model => model.CId, ViewBag.categories as SelectList,
+                                     "Select", new { id = "categoryId", @class = "form-control js-example-basic-single", required = "required" })
+
+
+                        </div>
+                    </div>
+
+
+
+                    <input asp-for="PId" class="control-label" type="hidden"/>
+                </div>
+                <div class="row">
+
+                    <div class="col-md-6">
+
+                        <div class="mb-3">
+                            <label asp-for="PName" class="control-label"></label>
+                            <input asp-for="PName" class="form-control" />
+                            <span asp-validation-for="PName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+
+
+                        <div class="mb-3">
+                            <label asp-for="PDescription" class="control-label"></label>
+                            <input asp-for="PDescription" class="form-control" />
+                            <span asp-validation-for="PDescription" class="text-danger"></span>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+
+
+                    <div class="col-md-6">
+
+                        <div class="mb-3">
+                            <label asp-for="PCostPrice" class="control-label"></label>
+                            <input asp-for="PCostPrice" class="form-control" />
+                            <span asp-validation-for="PCostPrice" class="text-danger"></span>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6">
+
+                        <div class="mb-3">
+                            <label asp-for="PsellPrice" class="control-label"></label>
+                            <input asp-for="PsellPrice" class="form-control" />
+                            <span asp-validation-for="PsellPrice" class="text-danger"></span>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+
+
+                    <div class="col-md-6">
+
+                        <div class="mb-3">
+                            <label asp-for="PSavings" class="control-label"></label>
+                            <input asp-for="PSavings" class="form-control" />
+                            <span asp-validation-for="PSavings" class="text-danger"></span>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6">
+
+
+                        <div class="mb-3">
+                            <label asp-for="StockQt" class="control-label"></label>
+                            <input asp-for="StockQt" class="form-control" />
+                            <span asp-validation-for="StockQt" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="RemainQt" class="control-label"></label>
+                            <input asp-for="RemainQt" class="form-control" />
+                            <span asp-validation-for="RemainQt" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="PImage" class="control-label"></label>
+                            <input asp-for="PImage" class="form-control" type="file" />
+                            <span asp-validation-for="PImage" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
