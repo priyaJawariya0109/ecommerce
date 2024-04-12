@@ -25,16 +25,22 @@ function alertWithSuccessMsg(msg) {
               
 }
 
-function alertWithErrorMsg(msg, timer, autoColse) {
-    if (timer == undefined) timer = 150000;           //time changed by kansoft-Tanvi on 19/08/2022 Ticket No - #SR-57335
+function alertWithErrorMsg(msg) {
+    /*if (timer == undefined) timer = 150000;           //time changed by kansoft-Tanvi on 19/08/2022 Ticket No - #SR-57335
     if (autoColse == undefined) autoColse = false;
     Swal.fire({
         type: "error",
         title: msg,
         showConfirmButton: autoColse,
         timer: timer
+    });*/
+   
+    Swal.fire({
+        icon: "error",
+        title:msg,
+        text: "Something went wrong!",
+        footer: '<a href="#">Why do I have this issue?</a>'
     });
-
     //swal.fire(msg, "", "error");
 }
 

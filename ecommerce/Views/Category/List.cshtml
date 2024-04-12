@@ -1,36 +1,5 @@
 ﻿@model ecommerce.Models.CategoryModel
 
-
-
-
-
-<style>
-    /* CSS for pagination links */
-    .pagination {
-        display: inline-block;
-    }
-
-        .pagination a {
-            color: black;
-            float: left;
-            padding: 8px 16px;
-            text-decoration: none;
-            transition: background-color .3s;
-            border: 1px solid #ddd;
-            margin: 0 4px;
-        }
-
-            .pagination a.active {
-                background-color: #4CAF50;
-                color: white;
-                border: 1px solid #4CAF50;
-            }
-
-            .pagination a:hover:not(.active) {
-                background-color: #ddd;
-            }
-</style>
-
 <div class="container">
     <div class="row">
         <div class="col">
@@ -40,7 +9,7 @@
 
     <div class="row">
         <div class="col text-end">
-            <a asp-action="details" asp-controller="category" class="btn btn-dark mb-3">Add Category</a>
+            <a asp-action="Details" asp-controller="Category" class="btn btn-dark mb-3">Add Category</a>
         </div>
     </div>
 
@@ -87,24 +56,26 @@
             $('#categoryTable').DataTable({
               
              
-                "serverSide": true,
-                "processing": true,
-                "filter":true,
+                serverSide: true,
+                processing: true,
+                filter:true,
           //      "lengthMenu": [10, 25, 50, 100],
             //    "searching": false,
-                "ajax": {
+                ajax: {
                     "url": '@Url.Action("CategoryList", "Category")',
                     "type": "POST",
                     "dataType": "json",
-                    "dataSrc": "",
+                    "dataSrc": "data"
                     // "data": function (d) {
                     //     d.page = (d.start / d.length) + 1; // page is 1-based index, so add 1
                     //     d.pageSize = d.length;
                     //     delete d.start; // Remove start parameter as it's not needed anymore
                     //     delete d.length; // Remove length parameter as it's not needed anymore
                     // }
+                            
+                 
                 },
-                "columns": [
+                columns: [
                     {
                         "data": null,
                         "name": "#",
@@ -145,13 +116,13 @@
                 //     $('#totalRecords').text(json.TotalRecords); // Update the total records element
                 // }
 
-
                 "columnDefs": [
                     {
-                        targets:[0],
-                        searchable:false,
+                        targets: [0],
+                        searchable: true,
                     }
                 ]
+          
             });
         });
 
@@ -193,6 +164,9 @@
     $(this).remove();
     });
     toastr['success']("Deleted Successfully");
+                        setTimeout(function () {
+                            location.reload();
+                        }, 3000);
     } else {
     toastr['error']("Error occurred");
     alert(result.message);

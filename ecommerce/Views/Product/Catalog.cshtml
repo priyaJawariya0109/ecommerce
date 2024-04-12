@@ -1,0 +1,132 @@
+﻿@model ecommerce.Models.ProductMapperView
+
+
+
+@{
+    ViewData["Title"] = "View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    /* CSS for pagination links */
+    .pagination {
+        display: inline-block;
+    }
+
+        .pagination a {
+            color: black;
+            float: left;
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: background-color .3s;
+            border: 1px solid #ddd;
+            margin: 0 4px;
+        }
+
+            .pagination a.active {
+                background-color: #4CAF50;
+                color: white;
+                border: 1px solid #4CAF50;
+            }
+
+            .pagination a:hover:not(.active) {
+                background-color: #ddd;
+            }
+</style>
+
+<h1>Catalog</h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="mb-3">
+                <label for="CId" class="control-label">Select Category</label>
+                @Html.DropDownListFor(model => model.CId, ViewBag.categories as SelectList,
+                         "Select", new { id = "categoryId", @class = "form-control js-example-basic-single", required = "required" })
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row" id="productContainer">
+        @foreach (var product in Model.ProductList )
+        {
+            <div class="col-md-4 d-flex">
+
+
+                <div class="card flex-fill" style="width: 18rem;">
+                    <img src="@Url.Content("~/Content/Image/" + product.PImage)" style="object-fit: cover; height: 100%;" class="card-img-top  img-fluid" alt="@product.PName">
+                    <div class="card-body">
+                        <h5 class="card-title">@product.PName</h5>
+                        <p class="card-text">@product.PDescription</p>
+                        <p class="card-text">
+
+                            <del>₹ @product.PCostPrice</del>
+                            <strong>₹ @product.PsellPrice</strong>
+                        </p>
+                    </div>
+                </div>
+        </div>
+        }
+     
+    </div>
+</div>
+<div class="pagination">
+    <!-- Previous page link -->
+    @if (Model.PageIndex > 1)
+    {
+        <a href="@Url.Action("Index", new { page = Model.PageIndex - 1, pageSize = Model.PageSize })">&laquo; Previous</a>
+    }
+
+    <!-- Display pagination links -->
+    @for (int i = 1; i <= Model.TotalPages; i++)
+    {
+        <a href="@Url.Action("Index", new { page = i, pageSize = Model.PageSize })" @(i == Model.PageIndex ? "class=active" : "")>@i</a>
+    }
+
+    <!-- Next page link -->
+    @if (Model.PageIndex < Model.TotalPages)
+    {
+        <a href="@Url.Action("Index", new { page = Model.PageIndex + 1, pageSize = Model.PageSize })">Next &raquo;</a>
+    }
+</div>
+@section Scripts {
+<script>
+    // Add event listener to the dropdown
+    $('body').on('change', '#categoryId', function () {
+
+        // Get the selected category value
+        var selectedCategoryId = $(this).val();
+       console.log(selectedCategoryId);
+        // Make an AJAX call to the Catalog action
+        $.ajax({
+            url: '@Url.Action("CatalogAjaxCall", "Product")', // Replace 'YourController' with your actual controller name
+            type: 'POST',
+            data: { CId: selectedCategoryId },
+            success: function (response) {
+                    $('#productContainer').empty();
+
+                // Handle the response, for example, update the content of a div with the returned data
+                    var html = '';
+                    response.productList.forEach(function (product) {
+                        html += '<div class="col-md-4 d-flex">';
+                        html += '<div class="card flex-fill" style="width: 18rem;">';
+                        html += '<img src="/Content/Image/' + product.pImage + '" style="object-fit: cover; height: 100%;" class="card-img-top img-fluid" alt="' + product.pName + '">';
+                        html += '<div class="card-body">';
+                        html += '<h5 class="card-title">' + product.pName + '</h5>';
+                        html += '<p class="card-text">' + product.pDescription + '</p>';
+                        html += '<p class="card-text"><del>₹ ' + product.pCostPrice + '</del> <strong>₹ ' + product.psellPrice + '</strong></p>';
+                        html += '</div></div></div>';
+                    });
+
+                    // Append the constructed HTML to the product container
+                    $('#productContainer').append(html);
+            },
+            error: function (xhr, status, error) {
+                // Handle errors
+               // console.error(xhr.responseText);
+            }
+        });
+    });
+</script>
+}

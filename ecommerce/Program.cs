@@ -4,7 +4,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-//builder.Services.AddScoped<ecommerceRepository,IecommerceRepository>();
+builder.Services.AddScoped<IDataEngine, DataEngine>();
+builder.Services.AddScoped<IecommerceRepository,ecommerceRepository>();
 
 var app = builder.Build();
 

@@ -1,4 +1,4 @@
-﻿@model ecommerce.Models.ProductModel
+﻿@model ecommerce.Models.ProductModelMapper
 
 @{
 
@@ -6,7 +6,7 @@
 }
 
 
-<h4 class="text-center">ProductModel</h4>
+<h4 class="text-center">@ViewBag.title</h4>
 <div class="text-end mb-3">
     <a href="@Url.Action("List", "Product")" class="btn btn-dark">Back to List</a>
 </div>
@@ -36,7 +36,7 @@
                     <div class="col-md-6">
 
                         <div class="mb-3">
-                            <label asp-for="PName" class="control-label"></label>
+                            <label for="PName" class="control-label">Product Name</label>
                             <input asp-for="PName" class="form-control" />
                             <span asp-validation-for="PName" class="text-danger"></span>
                         </div>
@@ -45,8 +45,8 @@
 
 
                         <div class="mb-3">
-                            <label asp-for="PDescription" class="control-label"></label>
-                            <input asp-for="PDescription" class="form-control" />
+                            <label for="PDescription" class="control-label">Product Description</label>
+                            <textarea asp-for="PDescription" class="form-control"></textarea>
                             <span asp-validation-for="PDescription" class="text-danger"></span>
                         </div>
 
@@ -58,17 +58,17 @@
                     <div class="col-md-6">
 
                         <div class="mb-3">
-                            <label asp-for="PCostPrice" class="control-label"></label>
-                            <input asp-for="PCostPrice" class="form-control" />
-                            <span asp-validation-for="PCostPrice" class="text-danger"></span>
+                            <label for="PCostPrice" class="control-label">Cost Price</label>
+                            <input asp-for="PCostPrice" class="form-control" id="PCostPrice" />
+                            <span asp-validation-for="PCostPrice" class="text-danger" ></span>
                         </div>
 
                     </div>
                     <div class="col-md-6">
 
                         <div class="mb-3">
-                            <label asp-for="PsellPrice" class="control-label"></label>
-                            <input asp-for="PsellPrice" class="form-control" />
+                            <label for="PsellPrice" class="control-label">Sell Price</label>
+                            <input asp-for="PsellPrice" class="form-control" id="PsellPrice" />
                             <span asp-validation-for="PsellPrice" class="text-danger"></span>
                         </div>
 
@@ -80,8 +80,8 @@
                     <div class="col-md-6">
 
                         <div class="mb-3">
-                            <label asp-for="PSavings" class="control-label"></label>
-                            <input asp-for="PSavings" class="form-control" />
+                            <label for="PSavings" class="control-label">Savings</label>
+                            <input asp-for="PSavings" class="form-control" readonly id="PSavings" />
                             <span asp-validation-for="PSavings" class="text-danger"></span>
                         </div>
 
@@ -90,7 +90,7 @@
 
 
                         <div class="mb-3">
-                            <label asp-for="StockQt" class="control-label"></label>
+                            <label for="StockQt" class="control-label">Stock Quantity</label>
                             <input asp-for="StockQt" class="form-control" />
                             <span asp-validation-for="StockQt" class="text-danger"></span>
                         </div>
@@ -99,17 +99,28 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label asp-for="RemainQt" class="control-label"></label>
+                            <label for="RemainQt" class="control-label">Remain Quantity</label>
                             <input asp-for="RemainQt" class="form-control" />
                             <span asp-validation-for="RemainQt" class="text-danger"></span>
                         </div>
                     </div>
+@*                     @if (Model != null && !string.IsNullOrEmpty(Model.PImage))
+{
+                    <div class="">
+
+                        <label for="PImage">Preview</label>
+                        <img src="@Url.Content("~/Content/Image/" + Model.PImage)" class="img-thumbnail" />
+
+                    </div>
+} *@
+
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label asp-for="PImage" class="control-label"></label>
-                            <input asp-for="PImage" class="form-control" type="file" />
+                            <label for="PImage" class="control-label">Product Images</label>
+                            <input id="PImage" class="form-control" type="file"  name="PImage"/>
                             <span asp-validation-for="PImage" class="text-danger"></span>
                         </div>
+                   
                     </div>
                 </div>
 
@@ -127,4 +138,21 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+   <script>
+        $(function () {
+            $('#PsellPrice, #PCostPrice').on('input', function () {
+                var sellPrice = parseFloat($('#PsellPrice').val());
+                var costPrice = parseFloat($('#PCostPrice').val());
+
+                if (!isNaN(sellPrice) && !isNaN(costPrice)) {
+                    var ans = costPrice-sellPrice;
+                    $('#PSavings').val(ans);
+                }
+            });
+        });
+
+
+   </script>
+
 }

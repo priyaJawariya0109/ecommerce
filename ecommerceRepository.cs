@@ -82,7 +82,7 @@ namespace ecommerceAccessLayer.DataLayer
                 return new List<Project>();
             }
 
-
+/*
             var categories = new List<CategoryModel>();
 
 
@@ -117,7 +117,7 @@ namespace ecommerceAccessLayer.DataLayer
             }
 
 
-            return categories;
+            return categories;*/
         }
 
 

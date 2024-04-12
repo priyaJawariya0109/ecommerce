@@ -6,16 +6,18 @@ namespace ecommerce.Models
     public class CategoryModel
     {
 
-
+        [DataNames("CId")]
         public int CId { get; set; }
+        [DataNames("Name")]
         [DisplayName("Category Name")]
         [Required(ErrorMessage = "Name is required")]
         public string Name { get; set; }
         [Required(ErrorMessage = "Description is required")]
+        [DataNames("Description")]
         public string Description { get; set; }
-
+        [DataNames("Active")]
         public bool Active { get; set; }
-        public int count1 { get; set; }
+       
 
     }
 /*
